@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Railcraft</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+</head>
+<body>
+    <div class="overlay"></div>
+
+    <div class="container">
+        <header>
+            <h1>Welcome to <span class="highlight">RAILCRAFT</span></h1>
+            <p class="tagline">The official survival minecraft server of Railway Challenge at Sheffield!</p>
+        </header>
+
+        <main>
+            <div class="ip-box">
+                <p>Join us at:</p>
+                <div class="ip-address" id="serverIP">minecraft.arthurhind.com</div>
+                <button class="btn" onclick="copyIP()">Copy Server Address</button>
+            </div>
+            
+            <section class="features">
+                <div class="card">
+                    <h3>Server Information</h3>
+                    <p><div class="info"></div></p>
+                </div>
+                <a href="https://discord.gg/q8rBwPZP" style="text-decoration:none">
+                <div class="card">
+                    <h3>Join our Discord</h3>
+                    <p>Join the Discord for voice channels and train discussions.</p>
+                </div>
+                </a>
+                <div class="card">
+                    <h3>Free to play</h3>
+                    <p>Free to play for all RCAS team members!</p>
+                </div>
+            </section>
+
+            <main>
+            <div class="ip-box">
+                <p>Players online:</p>
+                <div class="players"></div>
+            </div>
+
+            
+        </main>
+       
+        <footer>
+            <p>&copy; 2026 RAILCRAFT Server. Not affiliated with Mojang Studios.</p>
+        </footer>
+    </div>
+
+    <script>
+    $.getJSON('https://api.mcsrvstat.us/3/minecraft.arthurhind.com', function(data) {
+
+        var text = `Current Players: ${data.players.online} / ${data.players.max} <br> 
+                    Java Version: ${data.protocol.name}`
+        $(".info").html(text);
+
+        var player_info;
+        if (data.players.online == 0) {
+            player_info = `<div class="player-wrapper">No players online</div>`
+        } else {
+            for (let i=0; i < data.players.list.length; i++) {
+                player_info += `<div class="player-wrapper"><img src="https://minotar.net/helm/${data.players.list[i].uuid}/32.png" class="default" width="32" height="32">  ${data.players.list[i].name}</div>`;
+                if (i < data.players.list.length - 1) {
+                    player_info += '</br>'
+                }
+            }
+        }
+        $(".players").html(player_info.replace("undefined", ""));
+    });
+    </script>
+    <script>
+        function copyIP() {
+            const ipText = document.getElementById("serverIP").innerText;
+            navigator.clipboard.writeText(ipText).then(() => {
+                alert("Server IP copied to clipboard!");
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        }
+    </script>
+</body>
+</html>
